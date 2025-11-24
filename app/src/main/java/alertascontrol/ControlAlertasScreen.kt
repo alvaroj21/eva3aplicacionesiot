@@ -143,13 +143,3 @@ fun ControlAlertasScreen() {
     }
 }
 
-//objetivo: mostrar alertas visuales cuando la distancia es bajo o alta o medio
-//20 cm el inicio es de 0 o 1 hasta 100 sin no mal recuerdoA
-
-//puntos clave:
-// - comparar el valor es menor, activa una alerta visual (de texto con color)
-// - permite reiniciar el estado de alerta cuando se ajusta una nueva
-// distancia y deberia mostrar otro mesaje distinto de alerta
-
-//aprendizaje: se aprende como aplicar la logica condicional y actualizar
-// la interfaz antes cambios en firebase
