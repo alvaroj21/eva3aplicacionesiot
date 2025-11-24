@@ -73,11 +73,10 @@ fun LoginScreen(onLoginSuccess: () -> Unit) {
                     },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(50.dp)
-                    .shadow(6.dp, shape = RoundedCornerShape(25.dp)),
-                    colors = ButtonDefaults.buttonColors(containerColor = Color.White)
+                        .height(50.dp),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF2196F3))
                 ) {
-                    Text("Ingresar", color = Color.Black, fontWeight = FontWeight.Bold)
+                    Text("Ingresar", color = Color.White, fontWeight = FontWeight.Bold)
                 }
 
                 if (errorMessage != null) {
@@ -87,11 +86,6 @@ fun LoginScreen(onLoginSuccess: () -> Unit) {
                         fontSize = 14.sp
                     )
                 }
-
-                Text(
-                    text = "Las credenciales son administradas por el administrador del sistema",
-                    fontSize = 12.sp
-                )
             }
         }
     }

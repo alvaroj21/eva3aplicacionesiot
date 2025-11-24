@@ -92,139 +92,64 @@ fun ControlDeteccionScreen() {
         verticalArrangement = Arrangement.Center,
         modifier = Modifier
             .fillMaxSize()
-            .padding(24.dp)
+            .background(Color.White)
+            .padding(20.dp)
     ) {
         Text(
             text = "Control de Detección",
+            fontSize = 24.sp,
+            fontWeight = FontWeight.Bold
+        )
+
+        Spacer(modifier = Modifier.height(30.dp))
+
+        Text(
+            text = "${distanciaActual.toInt()} cm",
+            fontSize = 48.sp,
             fontWeight = FontWeight.Bold,
-            fontSize = 28.sp,
-            color = Color(0xFF424242)
+            color = if (distanciaActual <= distanciaDeteccion && distanciaActual > 0) 
+                Color.Red 
+            else 
+                Color.Black
         )
-
-        Spacer(modifier = Modifier.height(24.dp))
-
-        // Mostrar distancia actual del sensor
-        Card(
-            modifier = Modifier
-                .fillMaxWidth(0.85f)
-                .padding(8.dp),
-            colors = CardDefaults.cardColors(
-                containerColor = if (distanciaActual <= distanciaDeteccion && distanciaActual > 0) 
-                    Color(0xFFFFEBEE) // Rojo claro cuando detecta
-                else 
-                    Color(0xFFF5F5F5) // Gris cuando no detecta
-            ),
-            elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
-        ) {
-            Column(
-                modifier = Modifier.padding(20.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text(
-                    text = "Sensor de Distancia",
-                    fontSize = 14.sp,
-                    color = Color.Gray,
-                    fontWeight = FontWeight.Medium
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-                Text(
-                    text = "${distanciaActual.toInt()} cm",
-                    fontSize = 42.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = if (distanciaActual <= distanciaDeteccion && distanciaActual > 0) 
-                        Color(0xFFEF5350) 
-                    else 
-                        Color(0xFF424242)
-                )
-                if (distanciaActual <= distanciaDeteccion && distanciaActual > 0) {
-                    Spacer(modifier = Modifier.height(4.dp))
-                    Text(
-                        text = "¡Vehículo detectado!",
-                        fontSize = 12.sp,
-                        color = Color(0xFFEF5350),
-                        fontWeight = FontWeight.Bold
-                    )
-                }
-            }
+        
+        if (distanciaActual <= distanciaDeteccion && distanciaActual > 0) {
+            Spacer(modifier = Modifier.height(10.dp))
+            Text(
+                text = "¡Detectado!",
+                fontSize = 16.sp,
+                color = Color.Red,
+                fontWeight = FontWeight.Bold
+            )
         }
 
-        Spacer(modifier = Modifier.height(32.dp))
-
-        // Configurar distancia de detección
-        Text(
-            text = "Distancia de detección:",
-            fontSize = 18.sp,
-            fontWeight = FontWeight.SemiBold,
-            color = Color(0xFF424242)
-        )
-
-        Spacer(modifier = Modifier.height(12.dp))
-
-        // Mostrar umbral configurado
-        Card(
-            modifier = Modifier
-                .fillMaxWidth(0.85f)
-                .padding(8.dp),
-            colors = CardDefaults.cardColors(containerColor = Color(0xFFE3F2FD)),
-            elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
-        ) {
-            Column(
-                modifier = Modifier.padding(16.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text(
-                    text = "${distanciaDeteccion.toInt()} cm",
-                    fontSize = 36.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Color(0xFF42A5F5)
-                )
-                Text(
-                    text = "Umbral de detección",
-                    fontSize = 12.sp,
-                    color = Color(0xFF757575)
-                )
-            }
-        }
-
-        Spacer(modifier = Modifier.height(24.dp))
+        Spacer(modifier = Modifier.height(40.dp))
 
         Text(
-            text = "Ajustar umbral de detección:",
-            fontSize = 14.sp,
-            color = Color.Gray
+            text = "Umbral: ${distanciaDeteccion.toInt()} cm",
+            fontSize = 20.sp,
+            fontWeight = FontWeight.Bold
         )
 
-        Spacer(modifier = Modifier.height(12.dp))
+        Spacer(modifier = Modifier.height(20.dp))
 
         Slider(
             value = distanciaDeteccion,
             onValueChange = { distanciaDeteccion = it },
             valueRange = 5f..100f,
             steps = 95,
-            modifier = Modifier
-                .fillMaxWidth(0.85f)
-                .padding(horizontal = 8.dp),
-            colors = SliderDefaults.colors(
-                thumbColor = Color(0xFF42A5F5),
-                activeTrackColor = Color(0xFF42A5F5),
-                inactiveTrackColor = Color(0xFFE0E0E0)
-            )
+            modifier = Modifier.fillMaxWidth(0.8f)
         )
 
-        Spacer(modifier = Modifier.height(8.dp))
-
-        // Indicadores de rango
         Row(
-            modifier = Modifier
-                .fillMaxWidth(0.85f)
-                .padding(horizontal = 8.dp),
+            modifier = Modifier.fillMaxWidth(0.8f),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text("5 cm", fontSize = 12.sp, color = Color.Gray)
             Text("100 cm", fontSize = 12.sp, color = Color.Gray)
         }
 
-        Spacer(modifier = Modifier.height(32.dp))
+        Spacer(modifier = Modifier.height(30.dp))
 
         Button(
             onClick = {
@@ -240,24 +165,22 @@ fun ControlDeteccionScreen() {
                 }
             },
             colors = ButtonDefaults.buttonColors(
-                containerColor = Color(0xFF42A5F5)
+                containerColor = Color(0xFF2196F3)
             ),
-            shape = RoundedCornerShape(12.dp),
             modifier = Modifier
-                .fillMaxWidth(0.7f)
-                .height(60.dp)
+                .fillMaxWidth(0.65f)
+                .height(50.dp)
         ) {
-            Text("Guardar Distancia", color = Color.White, fontSize = 18.sp, fontWeight = FontWeight.SemiBold)
+            Text("Guardar", color = Color.White, fontSize = 16.sp)
         }
 
         AnimatedVisibility(visible = mostrarMensaje) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(12.dp))
                 Text(
-                    text = "Distancia de detección actualizada",
-                    color = Color(0xFF4CAF50),
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.SemiBold
+                    text = "Guardado",
+                    color = Color.Green,
+                    fontSize = 14.sp
                 )
             }
         }

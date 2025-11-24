@@ -59,40 +59,25 @@ fun ControlModoScreen() {
     Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(16.dp),
+                    .background(Color.White)
+                    .padding(20.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
                 Text(
                     text = "Modo de Operación",
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 28.sp,
-                    color = Color(0xFF424242)
+                    fontSize = 24.sp,
+                    fontWeight = FontWeight.Bold
                 )
 
-                Spacer(modifier = Modifier.height(24.dp))
-
-                // Indicador del modo actual
-                Text(
-                    text = "Modo actual:",
-                    fontSize = 18.sp,
-                    color = Color.Gray
-                )
-                
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(30.dp))
                 
                 Text(
-                    text = when (modoActual) {
+                    text = "Actual: ${when (modoActual) {
                         "Automatico" -> "Automático"
                         else -> modoActual
-                    },
-                    fontSize = 32.sp,
-                    color = when (modoActual) {
-                        "Automatico" -> Color(0xFF66BB6A)
-                        "Manual" -> Color(0xFF42A5F5)
-                        "Desactivado" -> Color(0xFFEF5350)
-                        else -> Color.Gray
-                    },
+                    }}",
+                    fontSize = 20.sp,
                     fontWeight = FontWeight.Bold
                 )
 
@@ -107,24 +92,20 @@ fun ControlModoScreen() {
                         Log.d("ControlModo", "Cambio a modo Manual")
                     },
                     modifier = Modifier
-                        .fillMaxWidth(0.85f)
-                        .height(70.dp),
+                        .fillMaxWidth(0.75f)
+                        .height(50.dp),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = if (modoActual == "Manual") Color(0xFF42A5F5) else Color(0xFFE3F2FD)
-                    ),
-                    shape = RoundedCornerShape(12.dp)
+                        containerColor = if (modoActual == "Manual") Color(0xFF2196F3) else Color.LightGray
+                    )
                 ) {
-                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        Text(
-                            text = "Modo Manual",
-                            fontSize = 18.sp,
-                            fontWeight = FontWeight.SemiBold,
-                            color = if (modoActual == "Manual") Color.White else Color(0xFF424242)
-                        )
-                    }
+                    Text(
+                        text = "Manual",
+                        fontSize = 16.sp,
+                        color = Color.White
+                    )
                 }
 
-                Spacer(modifier = Modifier.height(18.dp))
+                Spacer(modifier = Modifier.height(16.dp))
 
                 // Botón Modo Automático
                 Button(
@@ -135,24 +116,20 @@ fun ControlModoScreen() {
                         Log.d("ControlModo", "Cambio a modo Automatico")
                     },
                     modifier = Modifier
-                        .fillMaxWidth(0.85f)
-                        .height(70.dp),
+                        .fillMaxWidth(0.75f)
+                        .height(50.dp),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = if (modoActual == "Automatico") Color(0xFF66BB6A) else Color(0xFFE8F5E9)
-                    ),
-                    shape = RoundedCornerShape(12.dp)
+                        containerColor = if (modoActual == "Automatico") Color(0xFF4CAF50) else Color.LightGray
+                    )
                 ) {
-                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        Text(
-                            text = "Modo Automático",
-                            fontSize = 18.sp,
-                            fontWeight = FontWeight.SemiBold,
-                            color = if (modoActual == "Automatico") Color.White else Color(0xFF424242)
-                        )
-                    }
+                    Text(
+                        text = "Automático",
+                        fontSize = 16.sp,
+                        color = Color.White
+                    )
                 }
 
-                Spacer(modifier = Modifier.height(18.dp))
+                Spacer(modifier = Modifier.height(16.dp))
 
                 // Botón Desactivar
                 Button(
@@ -163,21 +140,17 @@ fun ControlModoScreen() {
                         Log.d("ControlModo", "Sistema desactivado")
                     },
                     modifier = Modifier
-                        .fillMaxWidth(0.85f)
-                        .height(70.dp),
+                        .fillMaxWidth(0.75f)
+                        .height(50.dp),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = if (modoActual == "Desactivado") Color(0xFFEF5350) else Color(0xFFFFEBEE)
-                    ),
-                    shape = RoundedCornerShape(12.dp)
+                        containerColor = if (modoActual == "Desactivado") Color(0xFFF44336) else Color.LightGray
+                    )
                 ) {
-                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        Text(
-                            text = "Desactivar",
-                            fontSize = 18.sp,
-                            fontWeight = FontWeight.SemiBold,
-                            color = if (modoActual == "Desactivado") Color.White else Color(0xFF424242)
-                        )
-                    }
+                    Text(
+                        text = "Desactivar",
+                        fontSize = 16.sp,
+                        color = Color.White
+                    )
                 }
 
                 Spacer(modifier = Modifier.height(24.dp))

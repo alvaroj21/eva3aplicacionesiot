@@ -1,40 +1,78 @@
 package lucescontrol
 
+import android.annotation.SuppressLint
 import android.app.TimePickerDialog
 import android.util.Log
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
+import kotlinx.coroutines.delay
 import java.text.SimpleDateFormat
-import java.util.*
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.ui.draw.shadow
-import com.google.firebase.database.*
-import java.util.*
-import androidx.compose.ui.platform.LocalContext
-import kotlinx.coroutines.launch
+import java.util.Calendar
+import java.util.Date
+import java.util.Locale
 
+@SuppressLint("DefaultLocale")
 @Composable
 fun ControlLucesScreen() {
 
     val database = FirebaseDatabase.getInstance()
     val lucesRef = database.getReference("lucesHorarios")
-    val ledRef = database.getReference("ledEstado")
 
     val context = LocalContext.current
 
     var horaEncendido by remember { mutableStateOf("18:00") }
     var horaApagado by remember { mutableStateOf("06:00") }
-    var estadoLed by remember { mutableStateOf("Desconocido") }
-    var mostrarLuces by remember { mutableStateOf(false) }
+    var horaActual by remember { mutableStateOf("") }
+
+    // Función para verificar si el LED debería estar encendido según horarios
+    fun estaEncendidoSegunHorario(horaActual: String, encendido: String, apagado: String): Boolean {
+        try {
+            val formato = SimpleDateFormat("HH:mm", Locale.getDefault())
+            val actual = formato.parse(horaActual)
+            val on = formato.parse(encendido)
+            val off = formato.parse(apagado)
+            
+            if (actual == null || on == null || off == null) return false
+            
+            // Si la hora de apagado es menor que la de encendido, significa que cruza medianoche
+            return if (off.before(on)) {
+                // Ejemplo: encendido 18:00, apagado 06:00
+                actual.after(on) || actual.before(off) || actual == on
+            } else {
+                // Ejemplo: encendido 06:00, apagado 18:00
+                (actual.after(on) || actual == on) && actual.before(off)
+            }
+        } catch (e: Exception) {
+            Log.e("ControlLuces", "Error al calcular estado: ${e.message}")
+            return false
+        }
+    }
 
     // --- Lectura inicial desde Firebase ---
     LaunchedEffect(Unit) {
@@ -43,30 +81,38 @@ fun ControlLucesScreen() {
             horaApagado = snapshot.child("apagado").getValue(String::class.java) ?: "06:00"
             Log.d("ControlLuces", "Horarios iniciales → Encendido=$horaEncendido | Apagado=$horaApagado")
         }
-        
-        // Leer estado inicial del LED
-        ledRef.get().addOnSuccessListener { snapshot ->
-            estadoLed = snapshot.getValue(String::class.java) ?: "OFF"
-            Log.d("ControlLuces", "Estado LED inicial: $estadoLed")
+    }
+
+    // Actualizar hora actual cada segundo
+    LaunchedEffect(Unit) {
+        while (true) {
+            val formato = SimpleDateFormat("HH:mm", Locale.getDefault())
+            horaActual = formato.format(Date())
+            delay(1000) // Actualizar cada segundo
         }
     }
 
-    // ver el LED en tiempo real desde terminal o firebase
+    // Escuchar cambios en los horarios desde Firebase
     DisposableEffect(Unit) {
         val listener = object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                val nuevoEstado = snapshot.getValue(String::class.java) ?: "OFF"
-                if (nuevoEstado != estadoLed) {
-                    estadoLed = nuevoEstado
-                    Log.d("ControlLuces", "Estado LED actualizado: $estadoLed")
-                }
+                horaEncendido = snapshot.child("encendido").getValue(String::class.java) ?: "18:00"
+                horaApagado = snapshot.child("apagado").getValue(String::class.java) ?: "06:00"
+                Log.d("ControlLuces", "Horarios actualizados → Encendido=$horaEncendido | Apagado=$horaApagado")
             }
             override fun onCancelled(error: DatabaseError) {
-                Log.e("ControlLuces", "Error al escuchar LED: ${error.message}")
+                Log.e("ControlLuces", "Error al escuchar horarios: ${error.message}")
             }
         }
-        ledRef.addValueEventListener(listener)
-        onDispose { ledRef.removeEventListener(listener) }
+        lucesRef.addValueEventListener(listener)
+        onDispose { lucesRef.removeEventListener(listener) }
+    }
+
+    // Calcular estado actual del LED basándose en horarios
+    val estadoLed = if (horaActual.isNotEmpty()) {
+        if (estaEncendidoSegunHorario(horaActual, horaEncendido, horaApagado)) "ON" else "OFF"
+    } else {
+        "OFF"
     }
 
     // Mostrar contenido directamente
@@ -75,125 +121,32 @@ fun ControlLucesScreen() {
         verticalArrangement = Arrangement.Center,
         modifier = Modifier
             .fillMaxSize()
-            .padding(24.dp)
+            .background(Color.White)
+            .padding(20.dp)
     ) {
-        Text("Control de Luces", fontWeight = FontWeight.Bold, fontSize = 28.sp, color = Color(0xFF424242))
-        Spacer(modifier = Modifier.height(32.dp))
+        Text("Control de Luces", fontSize = 24.sp, fontWeight = FontWeight.Bold)
+        Spacer(modifier = Modifier.height(30.dp))
 
-        // Card con estado del LED
-        Card(
-            modifier = Modifier
-                .fillMaxWidth(0.85f)
-                .padding(8.dp),
-            colors = CardDefaults.cardColors(
-                containerColor = when (estadoLed) {
-                    "ON" -> Color(0xFFE8F5E9)
-                    "OFF" -> Color(0xFFFFEBEE)
-                    else -> Color(0xFFF5F5F5)
-                }
-            ),
-            elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
-        ) {
-            Column(
-                modifier = Modifier.padding(20.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text(
-                    "Estado del LED",
-                    fontSize = 14.sp,
-                    color = Color.Gray,
-                    fontWeight = FontWeight.Medium
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-                Text(
-                    text = if (estadoLed == "ON") "ENCENDIDO" else if (estadoLed == "OFF") "APAGADO" else "DESCONOCIDO",
-                    color = when (estadoLed) {
-                        "ON" -> Color(0xFF4CAF50)
-                        "OFF" -> Color(0xFF757575)
-                        else -> Color.Gray
-                    },
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 28.sp
-                )
-                Spacer(modifier = Modifier.height(4.dp))
-                Text(
-                    "Control automático por horario",
-                    fontSize = 12.sp,
-                    color = Color(0xFF757575),
-                    fontWeight = FontWeight.Normal
-                )
-            }
-        }
+        Text(
+            text = if (estadoLed == "ON") "ENCENDIDO" else "APAGADO",
+            color = if (estadoLed == "ON") Color.Green else Color.Gray,
+            fontWeight = FontWeight.Bold,
+            fontSize = 28.sp
+        )
 
         Spacer(modifier = Modifier.height(40.dp))
-
-        Text(
-            text = "Control Manual (60 segundos)",
-            fontSize = 16.sp,
-            fontWeight = FontWeight.SemiBold,
-            color = Color(0xFF424242)
-        )
-        
-        Spacer(modifier = Modifier.height(8.dp))
-        
-        Text(
-            text = "El LED volverá a control automático después de 60 segundos",
-            fontSize = 12.sp,
-            color = Color.Gray,
-            modifier = Modifier.padding(horizontal = 32.dp)
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // Botón para control manual del LED
-        Row(
-            modifier = Modifier.fillMaxWidth(0.85f),
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            Button(
-                onClick = {
-                    ledRef.setValue("ON")
-                    Log.d("ControlLuces", "LED encendido manualmente")
-                },
-                modifier = Modifier.weight(1f).height(55.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF4CAF50)),
-                shape = RoundedCornerShape(12.dp)
-            ) {
-                Text("Encender", color = Color.White, fontWeight = FontWeight.SemiBold, fontSize = 16.sp)
-            }
-
-            Button(
-                onClick = {
-                    ledRef.setValue("OFF")
-                    Log.d("ControlLuces", "LED apagado manualmente")
-                },
-                modifier = Modifier.weight(1f).height(55.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFEF5350)),
-                shape = RoundedCornerShape(12.dp)
-            ) {
-                Text("Apagar", color = Color.White, fontWeight = FontWeight.SemiBold, fontSize = 16.sp)
-            }
-        }
-
-        Spacer(modifier = Modifier.height(32.dp))
-
-        Divider(modifier = Modifier.fillMaxWidth(0.85f), color = Color(0xFFE0E0E0))
-
-        Spacer(modifier = Modifier.height(24.dp))
         
         Text(
             text = "Horarios Automáticos",
             fontSize = 18.sp,
-            fontWeight = FontWeight.SemiBold,
-            color = Color(0xFF424242)
+            fontWeight = FontWeight.Bold
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(20.dp))
 
-
-                // --- ENCENDIDO ---
-                Text("Encendido: $horaEncendido", fontSize = 15.sp)
-                Button(
+        Text("Encendido: $horaEncendido", fontSize = 15.sp)
+        Spacer(modifier = Modifier.height(8.dp))
+        Button(
                     onClick = {
                         val calendario = Calendar.getInstance()
                         TimePickerDialog(
@@ -220,15 +173,15 @@ fun ControlLucesScreen() {
                             true
                         ).apply { setTitle("Seleccionar hora de encendido") }.show()
                     },
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF1976D2))
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF2196F3))
                 ) {
-                    Text("Editar Encendido", color = Color.White)
+                    Text("Editar", color = Color.White)
                 }
 
-                Spacer(modifier = Modifier.height(12.dp))
+                Spacer(modifier = Modifier.height(16.dp))
 
-                // --- APAGADO ---
                 Text("Apagado: $horaApagado", fontSize = 15.sp)
+                Spacer(modifier = Modifier.height(8.dp))
                 Button(
                     onClick = {
                         val calendario = Calendar.getInstance()
@@ -254,12 +207,10 @@ fun ControlLucesScreen() {
                             true
                         ).apply { setTitle("Seleccionar hora de apagado") }.show()
                     },
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF0288D1))
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF2196F3))
                 ) {
-                    Text("Editar Apagado", color = Color.White, fontSize = 16.sp, fontWeight = FontWeight.SemiBold)
+                    Text("Editar", color = Color.White, fontSize = 16.sp)
                 }
-
-                Spacer(modifier = Modifier.height(24.dp))
             }
         }
 

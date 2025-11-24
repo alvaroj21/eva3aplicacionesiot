@@ -139,50 +139,38 @@ fun ControlPortonScreen() {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp),
+            .background(Color.White)
+            .padding(20.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
         Text(
             text = "Control de Portón",
-            fontWeight = FontWeight.Bold,
-            fontSize = 28.sp,
-            color = Color(0xFF424242)
+            fontSize = 24.sp,
+            fontWeight = FontWeight.Bold
         )
 
-        Spacer(modifier = Modifier.height(24.dp))
+        Spacer(modifier = Modifier.height(30.dp))
 
-        // Indicador visual del estado
-        Text(
-            text = "Estado actual:",
-            fontSize = 18.sp,
-            color = Color.Gray
-        )
-        
-        Spacer(modifier = Modifier.height(8.dp))
-        
         Text(
             text = if (sistemaDesactivado) "Sistema Desactivado" else estadoPorton,
-            fontSize = 32.sp,
+            fontSize = 28.sp,
             color = when {
-                sistemaDesactivado -> Color(0xFF9E9E9E)
-                estadoPorton == "Abierto" -> Color(0xFF66BB6A)
-                estadoPorton == "Cerrado" -> Color(0xFFEF5350)
-                estadoPorton == "Abriendo" -> Color(0xFFFF9800)
-                estadoPorton == "Cerrando" -> Color(0xFFFF9800)
-                else -> Color.Gray
+                sistemaDesactivado -> Color.Gray
+                estadoPorton == "Abierto" -> Color(0xFF4CAF50)
+                estadoPorton == "Cerrado" -> Color(0xFFF44336)
+                else -> Color.Black
             },
             fontWeight = FontWeight.Bold
         )
 
         // Mostrar información de cierre automático si está en modo automático
         if (modoActual == "Automatico" && estadoPorton == "Abierto" && !sistemaDesactivado) {
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(10.dp))
             Text(
-                text = "Se cerrará automáticamente en $tiempoRestante segundos",
-                fontSize = 14.sp,
-                color = Color(0xFF42A5F5),
-                fontWeight = FontWeight.Medium
+                text = "Cierre automático en: $tiempoRestante seg",
+                fontSize = 13.sp,
+                color = Color.Gray
             )
         }
 
@@ -214,24 +202,22 @@ fun ControlPortonScreen() {
                 }
             },
             modifier = Modifier
-                .fillMaxWidth(0.8f)
-                .height(65.dp),
+                .fillMaxWidth(0.75f)
+                .height(50.dp),
             colors = ButtonDefaults.buttonColors(
-                containerColor = if (estadoPorton == "Abierto") Color(0xFFBDBDBD) else Color(0xFF66BB6A),
-                disabledContainerColor = Color(0xFFBDBDBD)
+                containerColor = if (estadoPorton == "Abierto") Color.LightGray else Color(0xFF4CAF50),
+                disabledContainerColor = Color.LightGray
             ),
-            shape = RoundedCornerShape(12.dp),
             enabled = !sistemaDesactivado && estadoPorton != "Abierto" && estadoPorton != "Abriendo"
         ) {
             Text(
-                text = "Abrir Portón",
-                fontSize = 18.sp,
-                fontWeight = FontWeight.SemiBold,
+                text = "ABRIR",
+                fontSize = 16.sp,
                 color = Color.White
             )
         }
 
-        Spacer(modifier = Modifier.height(20.dp))
+        Spacer(modifier = Modifier.height(16.dp))
 
         // Botón Cerrar Portón
         Button(
@@ -259,19 +245,17 @@ fun ControlPortonScreen() {
                 }
             },
             modifier = Modifier
-                .fillMaxWidth(0.8f)
-                .height(65.dp),
+                .fillMaxWidth(0.75f)
+                .height(50.dp),
             colors = ButtonDefaults.buttonColors(
-                containerColor = if (estadoPorton == "Cerrado") Color(0xFFBDBDBD) else Color(0xFFEF5350),
-                disabledContainerColor = Color(0xFFBDBDBD)
+                containerColor = if (estadoPorton == "Cerrado") Color.LightGray else Color(0xFFF44336),
+                disabledContainerColor = Color.LightGray
             ),
-            shape = RoundedCornerShape(12.dp),
             enabled = !sistemaDesactivado && estadoPorton != "Cerrado" && estadoPorton != "Cerrando"
         ) {
             Text(
-                text = "Cerrar Portón",
-                fontSize = 18.sp,
-                fontWeight = FontWeight.SemiBold,
+                text = "CERRAR",
+                fontSize = 16.sp,
                 color = Color.White
             )
         }

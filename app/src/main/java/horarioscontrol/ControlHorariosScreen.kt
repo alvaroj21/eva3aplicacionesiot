@@ -56,38 +56,23 @@ fun ControlHorariosScreen() {
         verticalArrangement = Arrangement.Center,
         modifier = Modifier
             .fillMaxSize()
-            .padding(24.dp)
+            .background(Color.White)
+            .padding(20.dp)
     ) {
         Text(
             text = "Horarios Automáticos",
-            fontSize = 28.sp,
-            fontWeight = FontWeight.Bold,
-            color = Color(0xFF424242)
+            fontSize = 24.sp,
+            fontWeight = FontWeight.Bold
         )
 
-        Spacer(modifier = Modifier.height(32.dp))
+        Spacer(modifier = Modifier.height(30.dp))
 
-        // Mostrar horarios actuales
-        Card(
-            modifier = Modifier
-                .fillMaxWidth(0.85f)
-                .padding(8.dp),
-            colors = CardDefaults.cardColors(containerColor = Color(0xFFF5F5F5)),
-            elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
-        ) {
-            Column(
-                modifier = Modifier.padding(20.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text("Apertura: $horaApertura", fontSize = 18.sp, fontWeight = FontWeight.SemiBold)
-                Spacer(modifier = Modifier.height(8.dp))
-                Text("Cierre: $horaCierre", fontSize = 18.sp, fontWeight = FontWeight.SemiBold)
-            }
-        }
+        Text("Apertura: $horaApertura", fontSize = 18.sp)
+        Spacer(modifier = Modifier.height(10.dp))
+        Text("Cierre: $horaCierre", fontSize = 18.sp)
 
         Spacer(modifier = Modifier.height(40.dp))
 
-        // Botón Editar Apertura
         Button(
             onClick = {
                 val picker = TimePickerDialog(
@@ -104,11 +89,10 @@ fun ControlHorariosScreen() {
             },
             modifier = Modifier
                 .fillMaxWidth(0.7f)
-                .height(60.dp),
-            shape = RoundedCornerShape(12.dp),
-            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF42A5F5))
+                .height(50.dp),
+            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF2196F3))
         ) {
-            Text("Editar Hora de Apertura", color = Color.White, fontSize = 16.sp, fontWeight = FontWeight.SemiBold)
+            Text("Editar Apertura", color = Color.White, fontSize = 16.sp)
         }
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -130,14 +114,11 @@ fun ControlHorariosScreen() {
             },
             modifier = Modifier
                 .fillMaxWidth(0.7f)
-                .height(60.dp),
-            shape = RoundedCornerShape(12.dp),
-            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF66BB6A))
+                .height(50.dp),
+            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF4CAF50))
         ) {
-            Text("Editar Hora de Cierre", color = Color.White, fontSize = 16.sp, fontWeight = FontWeight.SemiBold)
+            Text("Editar Cierre", color = Color.White, fontSize = 16.sp)
         }
-
-        Spacer(modifier = Modifier.height(24.dp))
     }
 }
 

@@ -80,9 +80,9 @@ fun MonitoreoScreen() {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFFF5F5F5))
+            .background(Color.White)
             .verticalScroll(rememberScrollState())
-            .padding(16.dp),
+            .padding(20.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
@@ -90,114 +90,74 @@ fun MonitoreoScreen() {
         
         Text(
             text = "Monitoreo de Sensores",
-            fontWeight = FontWeight.Bold,
-            fontSize = 22.sp,
-            color = Color(0xFF424242)
+            fontSize = 24.sp,
+            fontWeight = FontWeight.Bold
         )
 
-        // SECCIÓN DISTANCIA
-        Card(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(160.dp),
-            shape = RoundedCornerShape(12.dp),
-            colors = CardDefaults.cardColors(
-                containerColor = when {
-                    distancia < 30 -> Color(0xFFFFEBEE)
-                    distancia in 30f..80f -> Color(0xFFFFF8E1)
-                    else -> Color(0xFFE8F5E9)
-                }
-            ),
-            elevation = CardDefaults.cardElevation(defaultElevation = 3.dp)
+        Spacer(modifier = Modifier.height(20.dp))
+
+        // DISTANCIA
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(16.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
-            ) {
-                Text(
-                    text = "Sensor de Distancia",
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    color = Color(0xFF424242)
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-                Text(
-                    text = "${distancia.toInt()} cm",
-                    fontSize = 38.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Color(0xFF424242)
-                )
-                Spacer(modifier = Modifier.height(4.dp))
-                Text(
-                    text = when {
-                        distancia < 30 -> "Vehículo muy cerca"
-                        distancia in 30f..80f -> "Vehículo detectado"
-                        distancia >= 999 -> "Sin sensor"
-                        else -> "Sin detección"
-                    },
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.Medium,
-                    color = when {
-                        distancia < 30 -> Color(0xFFEF5350)
-                        distancia in 30f..80f -> Color(0xFFFF9800)
-                        else -> Color(0xFF66BB6A)
-                    }
-                )
-            }
+            Text(
+                text = "Sensor de Distancia",
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Bold
+            )
+            Spacer(modifier = Modifier.height(10.dp))
+            Text(
+                text = "${distancia.toInt()} cm",
+                fontSize = 38.sp,
+                fontWeight = FontWeight.Bold
+            )
+            Text(
+                text = when {
+                    distancia < 30 -> "Muy cerca"
+                    distancia in 30f..80f -> "Detectado"
+                    distancia >= 999 -> "Sin sensor"
+                    else -> "Normal"
+                },
+                fontSize = 14.sp,
+                color = when {
+                    distancia < 30 -> Color.Red
+                    distancia in 30f..80f -> Color(0xFFFF9800)
+                    else -> Color.Green
+                }
+            )
         }
 
-        // SECCIÓN LUZ
-        Card(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(160.dp),
-            shape = RoundedCornerShape(12.dp),
-            colors = CardDefaults.cardColors(
-                containerColor = when {
-                    nivelLuz < 100 -> Color(0xFF37474F)
-                    nivelLuz in 100..400 -> Color(0xFF78909C)
-                    nivelLuz in 400..800 -> Color(0xFFFFF59D)
-                    else -> Color(0xFFFFEB3B)
-                }
-            ),
-            elevation = CardDefaults.cardElevation(defaultElevation = 3.dp)
+        Spacer(modifier = Modifier.height(20.dp))
+        Divider(color = Color.LightGray)
+        Spacer(modifier = Modifier.height(20.dp))
+
+        // LUZ
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(16.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
-            ) {
-                Text(
-                    text = "Sensor de Luz Ambiente",
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    color = if (nivelLuz < 400) Color.White else Color(0xFF424242)
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-                Text(
-                    text = "${nivelLuz} lux",
-                    fontSize = 38.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = if (nivelLuz < 400) Color.White else Color(0xFF424242)
-                )
-                Spacer(modifier = Modifier.height(4.dp))
-                Text(
-                    text = when {
-                        nivelLuz < 100 -> "Oscuro"
-                        nivelLuz in 100..400 -> "Penumbra"
-                        nivelLuz in 400..800 -> "Normal"
-                        else -> "Muy brillante"
-                    },
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.Medium,
-                    color = if (nivelLuz < 400) Color(0xFFE0E0E0) else Color(0xFF616161)
-                )
-            }
+            Text(
+                text = "Sensor de Luz",
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Bold
+            )
+            Spacer(modifier = Modifier.height(10.dp))
+            Text(
+                text = "${nivelLuz} lux",
+                fontSize = 38.sp,
+                fontWeight = FontWeight.Bold
+            )
+            Text(
+                text = when {
+                    nivelLuz > 800 -> "Oscuro"
+                    nivelLuz in 400..800 -> "Penumbra"
+                    nivelLuz in 100..400 -> "Normal"
+                    else -> "Muy brillante"
+                },
+                fontSize = 14.sp,
+                color = Color.Gray
+            )
         }
 
         Spacer(modifier = Modifier.height(8.dp))

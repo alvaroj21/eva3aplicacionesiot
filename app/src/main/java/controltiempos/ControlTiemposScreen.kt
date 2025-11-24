@@ -40,87 +40,36 @@ fun ControlTiemposScreen() {
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(24.dp),
+                    .background(Color.White)
+                    .padding(20.dp),
                 verticalArrangement = Arrangement.Center
             ) {
                 Text(
                     text = "Control de Tiempos",
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 28.sp,
-                    color = Color(0xFF424242)
+                    fontSize = 24.sp,
+                    fontWeight = FontWeight.Bold
                 )
 
-                Spacer(modifier = Modifier.height(16.dp))
-                
+                Spacer(modifier = Modifier.height(30.dp))
+
                 Text(
-                    text = "Tiempo de cierre automático",
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    color = Color.Gray
+                    text = "${tiempoLocal.toInt()} segundos",
+                    fontSize = 48.sp,
+                    fontWeight = FontWeight.Bold
                 )
 
-                Spacer(modifier = Modifier.height(32.dp))
+                Spacer(modifier = Modifier.height(30.dp))
 
-                // Indicador del tiempo actual
-                Card(
-                    modifier = Modifier
-                        .fillMaxWidth(0.85f)
-                        .height(120.dp),
-                    shape = RoundedCornerShape(16.dp),
-                    colors = CardDefaults.cardColors(
-                        containerColor = Color(0xFFF5F5F5)
-                    ),
-                    elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
-                ) {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(20.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Center
-                    ) {
-                        Text(
-                            text = "${tiempoLocal.toInt()}",
-                            fontSize = 56.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = Color(0xFF424242)
-                        )
-                        Text(
-                            text = "segundos",
-                            fontSize = 18.sp,
-                            color = Color(0xFF757575),
-                            fontWeight = FontWeight.Medium
-                        )
-                    }
-                }
-
-                Spacer(modifier = Modifier.height(40.dp))
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                // Slider para ajustar tiempo de cierre
                 Slider(
                     value = tiempoLocal,
                     onValueChange = { tiempoLocal = it },
                     valueRange = 3f..30f,
                     steps = 27,
-                    modifier = Modifier
-                        .fillMaxWidth(0.85f)
-                        .padding(horizontal = 8.dp),
-                    colors = SliderDefaults.colors(
-                        thumbColor = Color(0xFF42A5F5),
-                        activeTrackColor = Color(0xFF42A5F5),
-                        inactiveTrackColor = Color(0xFFE0E0E0)
-                    )
+                    modifier = Modifier.fillMaxWidth(0.8f)
                 )
 
-                Spacer(modifier = Modifier.height(8.dp))
-
-                // Indicadores de rango
                 Row(
-                    modifier = Modifier
-                        .fillMaxWidth(0.85f)
-                        .padding(horizontal = 8.dp),
+                    modifier = Modifier.fillMaxWidth(0.8f),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Text("3 seg", fontSize = 12.sp, color = Color.Gray)
@@ -138,21 +87,19 @@ fun ControlTiemposScreen() {
                             }
                         Toast.makeText(
                             context,
-                            "Tiempo ajustado a ${tiempoLocal.toInt()} segundos",
+                            "Tiempo guardado",
                             Toast.LENGTH_SHORT
                         ).show()
                     },
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF42A5F5)),
-                    shape = RoundedCornerShape(12.dp),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF2196F3)),
                     modifier = Modifier
-                        .fillMaxWidth(0.7f)
-                        .height(60.dp)
+                        .fillMaxWidth(0.65f)
+                        .height(50.dp)
                 ) {
                     Text(
-                        "Guardar tiempo",
+                        "Guardar",
                         color = Color.White,
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.SemiBold
+                        fontSize = 16.sp
                     )
                 }
 

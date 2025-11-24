@@ -28,8 +28,8 @@ fun BarraNavegadoraSimple() {
                 .background(Color(0xFFF5F5F5))
         ) {
             when (pantallaSeleccionada) {
-                0 -> controlmodo.ControlModoScreen()
-                1 -> controlporton.ControlPortonScreen()
+                0 -> controlporton.ControlPortonScreen()
+                1 -> controlmodo.ControlModoScreen()
                 2 -> controltiempos.ControlTiemposScreen()
                 3 -> horarioscontrol.ControlHorariosScreen()
                 4 -> deteccioncontrol.ControlDeteccionScreen()
@@ -39,16 +39,14 @@ fun BarraNavegadoraSimple() {
             }
         }
 
-        // Barra inferior elevada sobre los botones del sistema
+        // Barra inferior simple
         Surface(
             color = Color.White,
-            tonalElevation = 6.dp,
-            shadowElevation = 12.dp,
             modifier = Modifier
                 .align(Alignment.BottomCenter)
-                .padding(bottom = 36.dp) // SUBE LA BARRA ENCIMA DE LOS BOTONES DEL TELÉFONO
+                .padding(bottom = 36.dp)
                 .fillMaxWidth()
-                .height(70.dp)
+                .height(60.dp)
         ) {
             Row(
                 modifier = Modifier
@@ -57,7 +55,7 @@ fun BarraNavegadoraSimple() {
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
-                val titulos = listOf("Modo", "Portón", "Tiempos", "Horarios", "Detección", "Alertas", "Luces", "Monitoreo")
+                val titulos = listOf("Portón", "Modo", "Tiempos", "Horarios", "Detección", "Alertas", "Luces", "Monitoreo")
                 
                 titulos.forEachIndexed { index, titulo ->
                     val isSelected = pantallaSeleccionada == index
@@ -65,29 +63,17 @@ fun BarraNavegadoraSimple() {
                     TextButton(
                         onClick = { pantallaSeleccionada = index },
                         colors = ButtonDefaults.textButtonColors(
-                            contentColor = if (isSelected) Color(0xFF42A5F5) else Color(0xFF757575)
+                            contentColor = if (isSelected) Color.Black else Color.Gray
                         ),
                         modifier = Modifier.weight(1f),
                         contentPadding = PaddingValues(horizontal = 0.dp, vertical = 4.dp)
                     ) {
-                        Column(
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalArrangement = Arrangement.Center
-                        ) {
-                            // Mostrar inicial o ícono
-                            Text(
-                                text = titulo.first().toString(),
-                                fontWeight = FontWeight.Bold,
-                                fontSize = 16.sp
-                            )
-                            // Texto pequeño debajo
-                            Text(
-                                text = titulo,
-                                fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
-                                fontSize = 9.sp,
-                                maxLines = 1
-                            )
-                        }
+                        Text(
+                            text = titulo,
+                            fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
+                            fontSize = 10.sp,
+                            maxLines = 1
+                        )
                     }
                 }
             }

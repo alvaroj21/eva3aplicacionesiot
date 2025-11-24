@@ -76,69 +76,49 @@ fun ControlAlertasScreen() {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(24.dp),
+            .background(Color.White)
+            .padding(20.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
         Text(
             text = "Control de Alertas",
-            fontWeight = FontWeight.Bold,
-            color = Color(0xFF424242),
-            fontSize = 28.sp
+            fontSize = 24.sp,
+            fontWeight = FontWeight.Bold
         )
 
-        Spacer(modifier = Modifier.height(32.dp))
+        Spacer(modifier = Modifier.height(30.dp))
 
-        // Card con el estado actual
-        Card(
-            modifier = Modifier
-                .fillMaxWidth(0.85f)
-                .padding(8.dp),
-            colors = CardDefaults.cardColors(
-                containerColor = when (estado) {
-                    "Crítico" -> Color(0xFFFFEBEE)
-                    "Peligro" -> Color(0xFFFFF8E1)
-                    else -> Color(0xFFE8F5E9)
-                }
-            ),
-            elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
-        ) {
-            Column(
-                modifier = Modifier.padding(24.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text(
-                    text = "${distancia.toInt()} cm",
-                    fontSize = 48.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Color(0xFF424242)
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-                Text(
-                    text = "Estado: $estado",
-                    fontSize = 24.sp,
-                    color = when (estado) {
-                        "Crítico" -> Color(0xFFEF5350)
-                        "Peligro" -> Color(0xFFFF9800)
-                        else -> Color(0xFF66BB6A)
-                    },
-                    fontWeight = FontWeight.Bold
-                )
-            }
-        }
+        Text(
+            text = "${distancia.toInt()} cm",
+            fontSize = 48.sp,
+            fontWeight = FontWeight.Bold
+        )
+        
+        Spacer(modifier = Modifier.height(15.dp))
+        
+        Text(
+            text = "Estado: $estado",
+            fontSize = 20.sp,
+            color = when (estado) {
+                "Crítico" -> Color.Red
+                "Peligro" -> Color(0xFFFF9800)
+                else -> Color.Green
+            },
+            fontWeight = FontWeight.Bold
+        )
 
-        Spacer(modifier = Modifier.height(32.dp))
+        Spacer(modifier = Modifier.height(40.dp))
 
-        // Indicadores de niveles
         Column(
-            modifier = Modifier.fillMaxWidth(0.85f),
+            modifier = Modifier.fillMaxWidth(0.75f),
             horizontalAlignment = Alignment.Start
         ) {
-            Text("• Crítico: < 20 cm", fontSize = 16.sp, color = Color(0xFFEF5350))
+            Text("• Crítico: < 20 cm", fontSize = 14.sp, color = Color.Red)
             Spacer(modifier = Modifier.height(8.dp))
-            Text("• Peligro: 20-50 cm", fontSize = 16.sp, color = Color(0xFFFF9800))
+            Text("• Peligro: 20-50 cm", fontSize = 14.sp, color = Color(0xFFFF9800))
             Spacer(modifier = Modifier.height(8.dp))
-            Text("• Normal: > 50 cm", fontSize = 16.sp, color = Color(0xFF66BB6A))
+            Text("• Normal: > 50 cm", fontSize = 14.sp, color = Color.Green)
         }
     }
 }
