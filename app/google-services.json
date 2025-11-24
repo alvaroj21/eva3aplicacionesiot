@@ -1,0 +1,49 @@
+{
+  "project_info": {
+    "project_number": "641720567915",
+    "firebase_url": "https://fir-eva2-dbf63-default-rtdb.firebaseio.com",
+    "project_id": "fir-eva2-dbf63",
+    "storage_bucket": "fir-eva2-dbf63.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:641720567915:android:9697cd252a619fcb8c492e",
+        "android_client_info": {
+          "package_name": "com.example.eva2"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDYrruvAOE5-NdWVxUagwJImAimzAsyhE8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:641720567915:android:c8ab06c4015b2de28c492e",
+        "android_client_info": {
+          "package_name": "com.example.portoneva2"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDYrruvAOE5-NdWVxUagwJImAimzAsyhE8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
