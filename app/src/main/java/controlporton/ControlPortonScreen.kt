@@ -164,16 +164,6 @@ fun ControlPortonScreen() {
             fontWeight = FontWeight.Bold
         )
 
-        // Mostrar información de cierre automático si está en modo automático
-        if (modoActual == "Automatico" && estadoPorton == "Abierto" && !sistemaDesactivado) {
-            Spacer(modifier = Modifier.height(10.dp))
-            Text(
-                text = "Cierre automático en: $tiempoRestante seg",
-                fontSize = 13.sp,
-                color = Color.Gray
-            )
-        }
-
         Spacer(modifier = Modifier.height(40.dp))
 
         // Botón Abrir Portón
