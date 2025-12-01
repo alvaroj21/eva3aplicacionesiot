@@ -15,14 +15,17 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.text.font.FontWeight
 import android.util.Log
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.auth.FirebaseUser
 
 @Composable
-fun LoginScreen(onLoginSuccess: () -> Unit) {
+fun LoginScreen(onLoginSuccess: (String) -> Unit) {
     val auth = FirebaseAuth.getInstance()
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var errorMessage by remember { mutableStateOf<String?>(null) }
     var isLoggedIn by remember { mutableStateOf(false) }
+    var tipoUsuario by remember { mutableStateOf<String?>(null) }
 
     if (!isLoggedIn) {
         Box(
@@ -62,9 +65,22 @@ fun LoginScreen(onLoginSuccess: () -> Unit) {
                         auth.signInWithEmailAndPassword(email, password)
                             .addOnCompleteListener { task ->
                                 if (task.isSuccessful) {
-                                    Log.d("FirebaseAuth", "Inicio de sesión exitoso: $email")
-                                    isLoggedIn = true
-                                    onLoginSuccess()
+                                    val user: FirebaseUser? = auth.currentUser
+                                    val uid = user?.uid
+                                    if (uid != null) {
+                                        // Leer tipo de usuario desde la base de datos
+                                        val ref = FirebaseDatabase.getInstance().getReference("usuarios").child(uid).child("tipo")
+                                        ref.get().addOnSuccessListener { snapshot ->
+                                            val tipo = snapshot.getValue(String::class.java) ?: "comun"
+                                            tipoUsuario = tipo
+                                            isLoggedIn = true
+                                            onLoginSuccess(tipo)
+                                        }.addOnFailureListener {
+                                            errorMessage = "No se pudo obtener el tipo de usuario"
+                                        }
+                                    } else {
+                                        errorMessage = "No se pudo obtener el usuario"
+                                    }
                                 } else {
                                     Log.e("FirebaseAuth", "Error al iniciar sesión: ${task.exception?.message}")
                                     errorMessage = task.exception?.message

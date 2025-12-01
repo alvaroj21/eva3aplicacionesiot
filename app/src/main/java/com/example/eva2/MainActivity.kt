@@ -88,17 +88,12 @@ class MainActivity : ComponentActivity() {
         //contenido de Compose
         setContent {
             Eva2Theme {
-                //para probar los botones de LED encendido o apagado 1/5
-            ControlLedScreen(database.getReference("ledEstado"))
-
-                //para ver la barra navegadora
-                Spacer(modifier = Modifier.height(24.dp))
-                barranavegacion.BarraNavegadoraSimple()
-
-                //login para ingresar el correo y clave de firebase (pantalla principal)
                 var isLoggedIn by remember { mutableStateOf(false) }
-                if (isLoggedIn) {
-                    barranavegacion.BarraNavegadoraSimple()
+                var tipoUsuario by remember { mutableStateOf<String?>(null) }
+
+                if (isLoggedIn && tipoUsuario != null) {
+                    // Si es admin, muestra todas las pantallas; si es comun, solo portón
+                    barranavegacion.BarraNavegadoraSimple(tipoUsuario = tipoUsuario!!)
                     Box(
                         modifier = Modifier
                             .fillMaxSize()
@@ -110,11 +105,12 @@ class MainActivity : ComponentActivity() {
                                 FirebaseAuth.getInstance().signOut()
                                 Log.d("FirebaseAuth", "Sesión cerrada correctamente por el usuario: ${FirebaseAuth.getInstance().currentUser?.email ?: "usuario"}")
                                 isLoggedIn = false
+                                tipoUsuario = null
                             },
                             modifier = Modifier
                                 .width(70.dp)
                                 .height(28.dp)
-                                .offset(x = (-345).dp, y = 4.dp),
+                                .offset(x = (-345).dp, y = 70.dp),
                             shape = RoundedCornerShape(3.dp),
                             colors = ButtonDefaults.buttonColors(containerColor = Color.White),
                             elevation = null,
@@ -129,9 +125,10 @@ class MainActivity : ComponentActivity() {
                         }
                     }
                 } else {
-                    loginyclave.LoginScreen(onLoginSuccess = { isLoggedIn = true })
-                }
-
+                    loginyclave.LoginScreen(onLoginSuccess = { tipo ->
+                        isLoggedIn = true
+                        tipoUsuario = tipo
+                    })
                 }
             }
         }
@@ -223,7 +220,7 @@ fun ControlLedScreen(ledRef: DatabaseReference) {
             )
         }
     }
-}
+}}
 
 // apuntes
 // se crea la conexion entre la app con firebase
