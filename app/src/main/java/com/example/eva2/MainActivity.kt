@@ -110,7 +110,7 @@ class MainActivity : ComponentActivity() {
                             modifier = Modifier
                                 .width(70.dp)
                                 .height(28.dp)
-                                .offset(x = (-345).dp, y = 70.dp),
+                                .offset(x = (-300).dp, y = 70.dp),
                             shape = RoundedCornerShape(3.dp),
                             colors = ButtonDefaults.buttonColors(containerColor = Color.White),
                             elevation = null,
